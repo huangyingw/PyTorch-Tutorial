@@ -1,0 +1,6 @@
+[remote "MorvanZhou"]
+    url = https://github.com/MorvanZhou/PyTorch-Tutorial.git
+    fetch = +refs/heads/*:refs/remotes/MorvanZhou/*
+[gsync]
+    remote = MorvanZhou
+    branch = master
