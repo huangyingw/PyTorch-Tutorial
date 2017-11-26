@@ -46,7 +46,7 @@ print(
 )
 
 # matrix multiplication
-data = [[1,2], [3,4]]
+data = [[1, 2], [3, 4]]
 tensor = torch.FloatTensor(data)  # 32-bit floating point
 # correct method
 print(
