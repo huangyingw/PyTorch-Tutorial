@@ -19,7 +19,8 @@ from torch.autograd import Variable
 
 
 tensor = torch.FloatTensor([[1, 2], [3, 4]])            # build a tensor
-variable = Variable(tensor, requires_grad=True)      # build a variable, usually for compute gradients
+# build a variable, usually for compute gradients
+variable = Variable(tensor, requires_grad=True)
 
 print(tensor)       # [torch.FloatTensor of size 2x2]
 print(variable)     # [torch.FloatTensor of size 2x2]
@@ -32,6 +33,7 @@ print(variable)     # [torch.FloatTensor of size 2x2]
 
 t_out = torch.mean(tensor * tensor)       # x^2
 v_out = torch.mean(variable * variable)   # x^2
+print(tensor * tensor)
 print(t_out)
 print(v_out)
 
@@ -47,16 +49,17 @@ v_out.backward()    # backpropagation from v_out
 #
 # let's check the result pytorch calculated for us below:
 
-variable.grad
+print variable
+print variable.grad
 
 
-variable # this is data in variable format
+variable  # this is data in variable format
 
 
-variable.data # this is data in tensor format
+variable.data  # this is data in tensor format
 
 
-variable.data.numpy() # numpy format
+variable.data.numpy()  # numpy format
 
 
 # Note that we did `.backward()` on `v_out` but `variable` has been assigned new values on it's `grad`.

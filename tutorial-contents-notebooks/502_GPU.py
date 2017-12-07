@@ -43,7 +43,8 @@ test_data = torchvision.datasets.MNIST(
     root='./mnist/', train=False)
 
 # !!!!!!!! Change in here !!!!!!!!! #
-test_x = Variable(torch.unsqueeze(test_data.test_data, dim=1)).type(torch.FloatTensor)[:2000].cuda() / 255.   # Tensor on GPU
+test_x = Variable(torch.unsqueeze(test_data.test_data, dim=1)).type(
+    torch.FloatTensor)[:2000].cuda() / 255.   # Tensor on GPU
 test_y = test_data.test_labels[:2000].cuda()
 
 
@@ -51,7 +52,8 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.conv1 = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=5, stride=1, padding=2,),
+            nn.Conv2d(in_channels=1, out_channels=16,
+                      kernel_size=5, stride=1, padding=2,),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2),)
         self.conv2 = nn.Sequential(
@@ -100,10 +102,12 @@ for epoch in range(EPOCH):
             test_output = cnn(test_x)
 
             # !!!!!!!! Change in here !!!!!!!!! #
-            pred_y = torch.max(test_output, 1)[1].cuda().data.squeeze()  # move the computation in GPU
+            pred_y = torch.max(test_output, 1)[1].cuda(
+            ).data.squeeze()  # move the computation in GPU
 
             accuracy = sum(pred_y == test_y) / test_y.size(0)
-            print('Epoch: ', epoch, '| train loss: %.4f' % loss.data[0], '| test accuracy: %.2f' % accuracy)
+            print('Epoch: ', epoch, '| train loss: %.4f' %
+                  loss.data[0], '| test accuracy: %.2f' % accuracy)
 
 
 plt.plot(losses_his, label='loss')
@@ -118,7 +122,8 @@ plt.show()
 
 # !!!!!!!! Change in here !!!!!!!!! #
 test_output = cnn(test_x[:10])
-pred_y = torch.max(test_output, 1)[1].cuda().data.squeeze() # move the computation in GPU
+pred_y = torch.max(test_output, 1)[1].cuda(
+).data.squeeze()  # move the computation in GPU
 
 print(pred_y, 'prediction number')
 print(test_y[:10], 'real number')

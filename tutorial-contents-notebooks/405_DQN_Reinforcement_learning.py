@@ -52,9 +52,12 @@ class DQN(object):
     def __init__(self):
         self.eval_net, self.target_net = Net(), Net()
 
-        self.learn_step_counter = 0                                     # for target updating
-        self.memory_counter = 0                                         # for storing memory
-        self.memory = np.zeros((MEMORY_CAPACITY, N_STATES * 2 + 2))     # initialize memory
+        # for target updating
+        self.learn_step_counter = 0
+        # for storing memory
+        self.memory_counter = 0
+        # initialize memory
+        self.memory = np.zeros((MEMORY_CAPACITY, N_STATES * 2 + 2))
         self.optimizer = torch.optim.Adam(self.eval_net.parameters(), lr=LR)
         self.loss_func = nn.MSELoss()
 
@@ -63,7 +66,8 @@ class DQN(object):
         # input only one sample
         if np.random.uniform() < EPSILON:   # greedy
             actions_value = self.eval_net.forward(x)
-            action = torch.max(actions_value, 1)[1].data.numpy()[0, 0]     # return the argmax
+            action = torch.max(actions_value, 1)[1].data.numpy()[
+                0, 0]     # return the argmax
         else:   # random
             action = np.random.randint(0, N_ACTIONS)
         return action
@@ -85,13 +89,16 @@ class DQN(object):
         sample_index = np.random.choice(MEMORY_CAPACITY, BATCH_SIZE)
         b_memory = self.memory[sample_index, :]
         b_s = Variable(torch.FloatTensor(b_memory[:, :N_STATES]))
-        b_a = Variable(torch.LongTensor(b_memory[:, N_STATES:N_STATES + 1].astype(int)))
-        b_r = Variable(torch.FloatTensor(b_memory[:, N_STATES + 1:N_STATES + 2]))
+        b_a = Variable(torch.LongTensor(
+            b_memory[:, N_STATES:N_STATES + 1].astype(int)))
+        b_r = Variable(torch.FloatTensor(
+            b_memory[:, N_STATES + 1:N_STATES + 2]))
         b_s_ = Variable(torch.FloatTensor(b_memory[:, -N_STATES:]))
 
         # q_eval w.r.t the action in experience
         q_eval = self.eval_net(b_s).gather(1, b_a)  # shape (batch, 1)
-        q_next = self.target_net(b_s_).detach()     # detach from graph, don't backpropagate
+        # detach from graph, don't backpropagate
+        q_next = self.target_net(b_s_).detach()
         q_target = b_r + GAMMA * q_next.max(1)[0]   # shape (batch, 1)
         loss = self.loss_func(q_eval, q_target)
 
@@ -117,7 +124,8 @@ for i_episode in range(400):
         # modify the reward
         x, x_dot, theta, theta_dot = s_
         r1 = (env.x_threshold - abs(x)) / env.x_threshold - 0.8
-        r2 = (env.theta_threshold_radians - abs(theta)) / env.theta_threshold_radians - 0.5
+        r2 = (env.theta_threshold_radians - abs(theta)) / \
+            env.theta_threshold_radians - 0.5
         r = r1 + r2
 
         dqn.store_transition(s, a, r, s_)

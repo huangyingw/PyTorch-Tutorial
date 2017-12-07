@@ -17,16 +17,22 @@ import matplotlib.pyplot as plt
 get_ipython().magic(u'matplotlib inline')
 
 
+import matplotlib
+matplotlib.__version__
+
+
 torch.manual_seed(1)    # reproducible
 
 
-x = torch.unsqueeze(torch.linspace(-1, 1, 100), dim=1)  # x data (tensor), shape=(100, 1)
-y = x.pow(2) + 0.2 * torch.rand(x.size())                 # noisy y data (tensor), shape=(100, 1)
+# x data (tensor), shape=(100, 1)
+x = torch.unsqueeze(torch.linspace(-1, 1, 100), dim=1)
+# noisy y data (tensor), shape=(100, 1)
+y = x.pow(2) + 0.2 * torch.rand(x.size())
 
 # torch can only train on Variable, so convert them to Variable
-x, y = Variable(x), Variable(y)
+x, y = Variable(x).cuda(), Variable(y).cuda()
 
-plt.scatter(x.data.numpy(), y.data.numpy())
+plt.scatter(x.data.cpu().numpy(), y.data.cpu().numpy())
 plt.show()
 
 
@@ -43,10 +49,11 @@ class Net(torch.nn.Module):
 
 
 net = Net(n_feature=1, n_hidden=10, n_output=1)     # define the network
+net.cuda()      # Moves all model parameters and buffers to the GPU.
 print(net)  # net architecture
 
 
-optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
+optimizer = torch.optim.SGD(net.parameters(), lr=0.05)
 loss_func = torch.nn.MSELoss()  # this is for regression mean squared loss
 
 
@@ -65,10 +72,12 @@ for t in range(100):
     if t % 10 == 0:
         # plot and show learning process
         plt.cla()
-        plt.scatter(x.data.numpy(), y.data.numpy())
-        plt.plot(x.data.numpy(), prediction.data.numpy(), 'r-', lw=5)
-        plt.text(0.5, 0, 'Loss=%.4f' % loss.data[0], fontdict={'size': 20, 'color': 'red'})
+        plt.scatter(x.data.cpu().numpy(), y.data.cpu().numpy())
+        plt.plot(x.data.cpu().numpy(),
+                 prediction.data.cpu().numpy(), 'r-', lw=5)
+        plt.text(0.5, 0, 'Loss=%.4f' %
+                 loss.data[0], fontdict={'size': 20, 'color':  'red'})
         plt.show()
-        plt.pause(0.2)
+        plt.pause(0.1)
 
 plt.ioff()

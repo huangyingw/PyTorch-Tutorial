@@ -32,7 +32,8 @@ class RNN(nn.Module):
             input_size=1,
             hidden_size=32,     # rnn hidden unit
             num_layers=1,       # number of rnn layer
-            batch_first=True,   # input & output will has batch size as 1s dimension. e.g. (batch, time_step, input_size)
+            # input & output will has batch size as 1s dimension. e.g. (batch, time_step, input_size)
+            batch_first=True,
         )
         self.out = nn.Linear(32, 1)
 
@@ -42,8 +43,10 @@ class RNN(nn.Module):
         # r_out (batch, time_step, output_size)
         r_out, h_state = self.rnn(x, h_state)
 
-        outs = []                                   # this is where you can find torch is dynamic
-        for time_step in range(r_out.size(1)):      # calculate output for each time step
+        # this is where you can find torch is dynamic
+        outs = []
+        # calculate output for each time step
+        for time_step in range(r_out.size(1)):
             outs.append(self.out(r_out[:, time_step, :]))
         return torch.stack(outs, dim=1), h_state
 
@@ -51,8 +54,10 @@ class RNN(nn.Module):
 rnn = RNN()
 print(rnn)
 
-optimizer = torch.optim.Adam(rnn.parameters(), lr=LR)   # optimize all cnn parameters
-loss_func = nn.MSELoss()                                # the target label is not one-hotted
+# optimize all cnn parameters
+optimizer = torch.optim.Adam(rnn.parameters(), lr=LR)
+# the target label is not one-hotted
+loss_func = nn.MSELoss()
 
 
 h_state = None   # for initial hidden state
@@ -72,7 +77,8 @@ plt.ion()   # continuously plot
 step = 0
 for i in range(60):
     dynamic_steps = np.random.randint(1, 4)  # has random time steps
-    start, end = step * np.pi, (step + dynamic_steps) * np.pi  # different time steps length
+    # different time steps length
+    start, end = step * np.pi, (step + dynamic_steps) * np.pi
     step += dynamic_steps
 
     # use sin predicts cos
@@ -85,12 +91,14 @@ for i in range(60):
     x_np = np.sin(steps)    # float32 for converting torch FloatTensor
     y_np = np.cos(steps)
 
-    x = Variable(torch.from_numpy(x_np[np.newaxis, :, np.newaxis]))    # shape (batch, time_step, input_size)
+    # shape (batch, time_step, input_size)
+    x = Variable(torch.from_numpy(x_np[np.newaxis, :, np.newaxis]))
     y = Variable(torch.from_numpy(y_np[np.newaxis, :, np.newaxis]))
 
     prediction, h_state = rnn(x, h_state)   # rnn output
     # !! next step is important !!
-    h_state = Variable(h_state.data)        # repack the hidden state, break the connection from last iteration
+    # repack the hidden state, break the connection from last iteration
+    h_state = Variable(h_state.data)
 
     loss = loss_func(prediction, y)         # cross entropy loss
     optimizer.zero_grad()                   # clear gradients for this training step

@@ -23,8 +23,9 @@ torch_data = torch.from_numpy(np_data)
 tensor2array = torch_data.numpy()
 print(
     '\nnumpy array:', np_data,          # [[0 1 2], [3 4 5]]
-    '\ntorch tensor:', torch_data,      #  0  1  2 \n 3  4  5    [torch.LongTensor of size 2x3]
-    '\ntensor to array:', tensor2array, # [[0 1 2], [3 4 5]]
+    # 0  1  2 \n 3  4  5    [torch.LongTensor of size 2x3]
+    '\ntorch tensor:', torch_data,
+    '\ntensor to array:', tensor2array,  # [[0 1 2], [3 4 5]]
 )
 
 
@@ -44,7 +45,8 @@ tensor.abs()
 # sin
 print(
     '\nsin',
-    '\nnumpy: ', np.sin(data),      # [-0.84147098 -0.90929743  0.84147098  0.90929743]
+    # [-0.84147098 -0.90929743  0.84147098  0.90929743]
+    '\nnumpy: ', np.sin(data),
     '\ntorch: ', torch.sin(tensor)  # [-0.8415 -0.9093  0.8415  0.9093]
 )
 
@@ -79,7 +81,8 @@ data = np.array(data)
 print(
     '\nmatrix multiplication (dot)',
     '\nnumpy: ', data.dot(data),        # [[7, 10], [15, 22]]
-    '\ntorch: ', tensor.dot(tensor)     # this will convert tensor to [1,2,3,4], you'll get 30.0
+    # this will convert tensor to [1,2,3,4], you'll get 30.0
+    '\ntorch: ', tensor.dot(tensor)
 )
 
 

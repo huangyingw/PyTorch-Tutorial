@@ -21,8 +21,10 @@ torch.manual_seed(1)    # reproducible
 
 # ### Generate some fake data
 
-x = torch.unsqueeze(torch.linspace(-1, 1, 100), dim=1)  # x data (tensor), shape=(100, 1)
-y = x.pow(2) + 0.2 * torch.rand(x.size())  # noisy y data (tensor), shape=(100, 1)
+# x data (tensor), shape=(100, 1)
+x = torch.unsqueeze(torch.linspace(-1, 1, 100), dim=1)
+# noisy y data (tensor), shape=(100, 1)
+y = x.pow(2) + 0.2 * torch.rand(x.size())
 x, y = Variable(x, requires_grad=False), Variable(y, requires_grad=False)
 
 
@@ -52,7 +54,8 @@ def save():
 
     # 2 ways to save the net
     torch.save(net1, 'net.pkl')  # save entire net
-    torch.save(net1.state_dict(), 'net_params.pkl')   # save only the parameters
+    # save only the parameters
+    torch.save(net1.state_dict(), 'net_params.pkl')
 
 
 def restore_net():
